@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>{% block title %}{% endblock %} | Django News</title>
+    </head>
+
+    <body>
+        <div class="max-w-3xl mx-auto p-1">
+            <nav class="p-1 flex items-center justify-between bg-orange-400">
+                <div>
+                    <a href="{% url 'core:index' %}" class="mr-2 font-bold">Django News</a>
+                    <a href="{% url 'core:new' %}">new</a> | 
+                    <a href="{% url 'story:create' %}">submit</a>
+                </div>
+
+                <div>
+                    {% if request.user.is_authenticated %}
+                        <a href="#">{{ request.user.username }}</a> |
+                        <a href="{% url 'core:logout' %}">logout</a>
+                    {% else %}
+                        <a href="{% url 'core:login' %}">login</a> |
+                        <a href="{% url 'core:signup' %}">signup</a>
+                    {% endif %}
+                </div>
+            </nav>
+
+            <main class="bg-orange-100">
+                {% block content %}
+                {% endblock %}
+            </main>
+
+            <footer>
+            </footer>
+        </div>
+    </body>
+</html>

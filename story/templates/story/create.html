@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Create story{% endblock %}
+
+{% block content %}
+<div class="p-2">
+    <h1 class="mb-4 font-bold">Create story</h1>
+
+    <form method="post" action=".">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button class="mt-5 p-1 rounded-sm border border-gray-500 bg-gray-100">Submit</button>
+    </form>
+</div>
+{% endblock %}

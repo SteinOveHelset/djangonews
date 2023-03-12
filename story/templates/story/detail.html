@@ -1,0 +1,75 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ story.title }}{% endblock %}
+
+{% block content %}
+<div class="p-2 flex">
+    {% if not story.has_voted %}
+        <a href="{% url 'story:vote' story.id %}?redirect_page=detail" class="text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+            </svg>
+        </a>
+    {% endif %}
+
+    <div>
+        <p>
+            <a href="{% url 'story:detail' story.id %}">{{ story.title }}</a>
+
+            {% if story.url %}
+                <a href="{{ story.url }}" class="text-gray-500">({{ story.url }})</a>
+            {% elif story.text %}
+                <p>{{ story.text }}</p>
+            {% endif %}
+        </p>
+
+        <div class="flex text-gray-500">
+            <p>
+                {{ story.number_of_votes }} points by {{ story.created_by.username }} {{ story.created_at|timesince }} ago
+            </p>
+
+            <p class="px-3">|</p>
+
+            <p>
+                {{ story.comments.count }} comments
+            </p>
+
+            {% if story.has_voted %}
+                <p class="px-3">|</p>
+                <a href="{% url 'story:unvote' story.id %}?redirect_page=detail" class="text-gray-500">Unvote</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="p-2">
+    {% if request.user.is_authenticated %}
+        <form method="post" action=".">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button class="mt-5 p-1 rounded-sm border border-gray-500 bg-gray-100">Submit</button>
+        </form>
+    {% else %}
+        <p>You need to log in to submit a comment!</p>
+    {% endif %}
+</div>
+
+<div class="p-2">
+    {% for comment in story.comments.all %}
+        <div class="p-2">
+            <p class="text-gray-500">
+                {{ comment.created_by.username }}
+                |
+                {{ comment.created_at|timesince }} ago
+            </p>
+
+            <p class="mt-2">
+                {{ comment.text}}
+            </p>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

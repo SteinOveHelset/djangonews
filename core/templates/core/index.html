@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+    {% for story in stories %}
+        <div class="p-2 flex">
+            <div class="flex">
+                <p class="text-gray-500">{{ forloop.counter }}.</p>
+
+                {% if not story.has_voted %}
+                    <a href="{% url 'story:vote' story.id %}?redirect_page=core:index" class="text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                        </svg>
+                    </a>
+                {% endif %}
+            </div>
+
+            <div>
+                <p>
+                    <a href="{% url 'story:detail' story.id %}">{{ story.title }}</a>
+
+                    {% if story.url %}
+                        <a href="{{ story.url }}" class="text-gray-500">({{ story.url }})</a>
+                    {% endif %}
+                </p>
+
+                <div class="flex text-gray-500">
+                    <p>
+                        {{ story.number_of_votes }} points by {{ story.created_by.username }} {{ story.created_at|timesince }} ago
+                    </p>
+
+                    <p class="px-3">|</p>
+
+                    <p>
+                        {{ story.comments.count }} comments
+                    </p>
+
+                    {% if story.has_voted %}
+                        <p class="px-3">|</p>
+                        <a href="{% url 'story:unvote' story.id %}?redirect_page=core:index" class="text-gray-500">Unvote</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
